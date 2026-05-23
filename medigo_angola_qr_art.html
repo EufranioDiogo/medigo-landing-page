@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #FAFAF8;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .poster {
+    width: 680px;
+    background: #FAFAF8;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── Decorative sun rays top-right ─── */
+  .sun-rays {
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 280px; height: 280px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Top stripe — Angola flag red ─── */
+  .stripe-top {
+    background: #CC0000;
+    height: 6px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+  .stripe-bottom {
+    background: #111111;
+    height: 6px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Header ─── */
+  .header {
+    background: linear-gradient(135deg, #0DB8A7 0%, #089B8C 60%, #067A6E 100%);
+    padding: 36px 48px 32px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 20px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.06);
+  }
+
+  .header-inner { position: relative; z-index: 2; }
+
+  .country-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 100px;
+    padding: 5px 14px;
+    margin-bottom: 20px;
+  }
+  .country-badge span {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.95);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .flag-mini {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5px;
+    width: 18px;
+    height: 12px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .flag-mini-r { background: #CC0000; flex: 1; }
+  .flag-mini-b { background: #111111; flex: 1; }
+
+  .header-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: white;
+    letter-spacing: -1px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .header-logo em {
+    font-style: italic;
+    color: rgba(255,255,255,0.75);
+    font-weight: 400;
+  }
+  .header-tagline {
+    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Machete decoration ─── */
+  .machete-svg {
+    position: absolute;
+    top: 24px; right: 44px;
+    opacity: 0.18;
+    z-index: 1;
+  }
+
+  /* ── Body ─── */
+  .body {
+    padding: 40px 48px 36px;
+    display: flex;
+    gap: 36px;
+    align-items: flex-start;
+    background: #FAFAF8;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── QR side ─── */
+  .qr-side {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .qr-frame {
+    background: white;
+    border-radius: 20px;
+    padding: 14px;
+    border: 2px solid #E0F7F4;
+    box-shadow:
+      0 8px 32px rgba(13,184,167,0.12),
+      0 2px 8px rgba(0,0,0,0.06);
+    position: relative;
+  }
+  .qr-frame::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 24px;
+    border: 1.5px solid rgba(13,184,167,0.2);
+    pointer-events: none;
+  }
+  /* Corner accents — Angola colours */
+  .corner {
+    position: absolute;
+    width: 22px; height: 22px;
+  }
+  .corner-tl { top: 4px; left: 4px; border-top: 3px solid #CC0000; border-left: 3px solid #CC0000; border-radius: 4px 0 0 0; }
+  .corner-tr { top: 4px; right: 4px; border-top: 3px solid #111111; border-right: 3px solid #111111; border-radius: 0 4px 0 0; }
+  .corner-bl { bottom: 4px; left: 4px; border-bottom: 3px solid #111111; border-left: 3px solid #111111; border-radius: 0 0 0 4px; }
+  .corner-br { bottom: 4px; right: 4px; border-bottom: 3px solid #CC0000; border-right: 3px solid #CC0000; border-radius: 0 0 4px 0; }
+
+  #qr-canvas {
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .scan-label {
+    margin-top: 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #0DB8A7;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  /* ── Content side ─── */
+  .content-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 2px;
+  }
+
+  .headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: #0B1724;
+    line-height: 1.1;
+    letter-spacing: -0.8px;
+  }
+  .headline em {
+    color: #0DB8A7;
+    font-style: italic;
+  }
+
+  .sub {
+    font-size: 14px;
+    color: rgba(11,23,36,0.55);
+    line-height: 1.65;
+    font-weight: 400;
+  }
+
+  /* ── Feature pills ─── */
+  .pills {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    border: 1.5px solid rgba(11,23,36,0.08);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #0B1724;
+    transition: border-color 0.2s;
+  }
+  .pill:hover { border-color: rgba(13,184,167,0.4); }
+  .pill-dot {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* ── URL bar ─── */
+  .url-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    border: 1.5px solid #C2F0EB;
+    border-radius: 12px;
+    padding: 11px 16px;
+    box-shadow: 0 2px 8px rgba(13,184,167,0.08);
+  }
+  .url-icon {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: #0DB8A7;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .url-text {
+    flex: 1;
+    font-size: 11.5px;
+    color: rgba(11,23,36,0.45);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 400;
+  }
+  .url-text strong {
+    color: #0DB8A7;
+    font-weight: 600;
+  }
+
+  /* ── Angola motif band ─── */
+  .motif-band {
+    background: #0B1724;
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .motif-band::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(204,0,0,0.08), transparent 70%);
+  }
+  .motif-text {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .motif-emblem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .angola-star {
+    color: #FFCC00;
+    font-size: 20px;
+    line-height: 1;
+  }
+  .angola-ring {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 2px solid #CC0000;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .angola-ring::before {
+    content: '';
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #CC0000;
+  }
+  .motif-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.5px;
+  }
+  .motif-brand span { color: #0DB8A7; }
+
+  /* ── Bottom stripe ─── */
+  .bottom-flag {
+    height: 4px;
+    background: linear-gradient(to right, #CC0000 50%, #111111 50%);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* geometric bg pattern */
+  .geo-pattern {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.03;
+  }
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <!-- Top red stripe -->
+  <div class="stripe-top"></div>
+
+  <!-- Header -->
+  <div class="header">
+    <!-- Machete / gear Angola motif (abstracted) -->
+    <svg class="machete-svg" width="120" height="120" viewBox="0 0 120 120" fill="none">
+      <circle cx="60" cy="60" r="55" stroke="white" stroke-width="2"/>
+      <circle cx="60" cy="60" r="38" stroke="white" stroke-width="1.5" stroke-dasharray="8 4"/>
+      <line x1="60" y1="10" x2="60" y2="110" stroke="white" stroke-width="2"/>
+      <line x1="10" y1="60" x2="110" y2="60" stroke="white" stroke-width="2"/>
+      <line x1="23" y1="23" x2="97" y2="97" stroke="white" stroke-width="1.5"/>
+      <line x1="97" y1="23" x2="23" y2="97" stroke="white" stroke-width="1.5"/>
+      <circle cx="60" cy="60" r="8" fill="white" opacity="0.8"/>
+      <!-- Star points -->
+      <polygon points="60,18 63,28 73,28 65,34 68,44 60,38 52,44 55,34 47,28 57,28" fill="white" opacity="0.6"/>
+    </svg>
+
+    <div class="header-inner">
+      <div class="country-badge">
+        <div class="flag-mini">
+          <div class="flag-mini-r"></div>
+          <div class="flag-mini-b"></div>
+        </div>
+        <span>Angola</span>
+      </div>
+
+      <div class="header-logo">
+        medi<em>go</em>
+      </div>
+      <div class="header-tagline">Saúde ao seu alcance · Luanda &rarr; Angola</div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="body">
+
+    <!-- QR Code -->
+    <div class="qr-side">
+      <div class="qr-frame">
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+        <div id="qr-canvas"></div>
+      </div>
+      <div class="scan-label">Digitalizar</div>
+    </div>
+
+    <!-- Content -->
+    <div class="content-side">
+      <div class="headline">
+        A sua saúde,<br><em>ao alcance de um toque</em>
+      </div>
+      <div class="sub">
+        Médicos, farmácias, emergências e muito mais — disponíveis agora em Angola.
+      </div>
+
+      <div class="pills">
+        <div class="pill">
+          <div class="pill-dot" style="background:#FFF0F0">🩺</div>
+          Médicos certificados em minutos
+        </div>
+        <div class="pill">
+          <div class="pill-dot" style="background:#FFF5E0">🏥</div>
+          Emergências 24h / 7 dias
+        </div>
+        <div class="pill">
+          <div class="pill-dot" style="background:#E8FAF8">💊</div>
+          Farmácias e receitas digitais
+        </div>
+      </div>
+
+      <div class="url-bar">
+        <div class="url-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+        </div>
+        <div class="url-text">
+          <strong>eufraniodiogo.github.io</strong>/medigo-landing-page/
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Angola motif band -->
+  <div class="motif-band">
+    <div class="motif-text">República de Angola · Luanda</div>
+    <div class="motif-emblem">
+      <div class="angola-ring"></div>
+      <div class="angola-star">★</div>
+      <div class="angola-ring"></div>
+    </div>
+    <div class="motif-brand">medi<span>go</span></div>
+  </div>
+
+  <!-- Bottom flag stripe -->
+  <div class="bottom-flag"></div>
+
+  <!-- Black bottom stripe -->
+  <div class="stripe-bottom"></div>
+</div>
+
+<script>
+  new QRCode(document.getElementById("qr-canvas"), {
+    text: "https://eufraniodiogo.github.io/medigo-landing-page/",
+    width: 180,
+    height: 180,
+    colorDark: "#0B1724",
+    colorLight: "#FFFFFF",
+    correctLevel: QRCode.CorrectLevel.H
+  });
+</script>
+</body>
+</html>
