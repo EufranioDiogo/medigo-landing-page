@@ -1,3 +1,3 @@
 ---
-permalink: medigo-landing.html
+permalink: index.html
 ---
