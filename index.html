@@ -1980,6 +1980,40 @@
         }
       }
 
+/* ── Footer ──────────────────────────────────────────────────────── */
+footer{
+  background:var(--ink);color:rgba(255,255,255,.55);
+  padding:64px 80px 40px;
+}
+.footer-top{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:48px;padding-bottom:48px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.footer-brand .nav-logo{color:#fff;display:block;margin-bottom:16px}
+.footer-brand .nav-logo span{color:var(--teal)}
+.footer-brand p{font-size:13px;line-height:1.7;max-width:280px;color:rgba(255,255,255,.45)}
+.footer-col h4{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.9);margin-bottom:20px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+.footer-col a{color:rgba(255,255,255,.45);text-decoration:none;font-size:13.5px;transition:color .2s}
+.footer-col a:hover{color:var(--teal)}
+.footer-bottom{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:32px;font-size:12px;
+}
+.footer-bottom-left{color:rgba(255,255,255,.3)}
+.footer-socials{display:flex;gap:14px}
+.social-btn{
+  width:36px;height:36px;border-radius:10px;
+  background:rgba(255,255,255,.07);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:rgba(255,255,255,.5);
+  text-decoration:none;
+  transition:background .3s,color .3s;
+}
+.social-btn:hover{background:var(--teal);color:#fff}
+
+
       /* ── Responsive ───────────────────────────────────────────────────── */
       @media (max-width: 900px) {
         #hero {
@@ -2018,6 +2052,8 @@
           gap: 14px;
           text-align: center;
         }
+          .footer-top{grid-template-columns:1fr 1fr}
+
         .doctors-grid {
           grid-template-columns: repeat(2, 1fr);
         }
@@ -3569,16 +3605,56 @@
       </section>
 
       <!-- ── FOOTER ──────────────────────────────────────────────────────── -->
-      <footer>
-        <div class="footer-logo">medi<span>go</span></div>
-        <div>© 2025 Medigo Angola. Todos os direitos reservados.</div>
-        <div class="footer-links">
-          <a href="#">Privacidade</a>
-          <a href="#">Termos</a>
-          <a href="#">Contacto</a>
-        </div>
-      </footer>
-    </main>
+      <!-- ── Footer ── -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a class="nav-logo" href="#">Medi<span>go</span></a>
+      <p>Democratizando o acesso à saúde de qualidade para todos os brasileiros, de onde estiverem.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Produto</h4>
+      <ul>
+        <li><a href="#">Funcionalidades</a></li>
+        <li><a href="#">Especialidades</a></li>
+        <li><a href="#">Para Médicos</a></li>
+        <li><a href="#">Para Empresas</a></li>
+        <li><a href="#">Blog de Saúde</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Empresa</h4>
+      <ul>
+        <li><a href="#">Sobre Nós</a></li>
+        <li><a href="#">Carreiras</a></li>
+        <li><a href="#">Imprensa</a></li>
+        <li><a href="#">Investidores</a></li>
+        <li><a href="#">Contato</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="#">Privacidade</a></li>
+        <li><a href="#">Termos de Uso</a></li>
+        <li><a href="#">LGPD</a></li>
+        <li><a href="#">Política de Cookies</a></li>
+        <li><a href="#">Ouvidoria</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-bottom-left">© 2025 Medigo Saúde Digital Ltda. CNPJ 00.000.000/0001-00</div>
+    <div class="footer-socials">
+      <a href="#" class="social-btn">in</a>
+      <a href="#" class="social-btn">ig</a>
+      <a href="#" class="social-btn">tw</a>
+      <a href="#" class="social-btn">yt</a>
+    </div>
+  </div>
+</footer>
+
+</main>
 
     <script>
       /* ── Custom cursor ──────────────────────────────────────────────── */
