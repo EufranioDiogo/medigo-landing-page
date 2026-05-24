@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #F0F4F6;
+    display: flex;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .poster {
+    width: 680px;
+    background: #FFFFFF;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  }
+
+  /* ── Flag stripe top ── */
+  .flag-top {
+    display: flex;
+    height: 8px;
+  }
+  .flag-top-r { background: #CC0000; flex: 1; }
+  .flag-top-b { background: #111111; flex: 1; }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(135deg, #0A1F3C 0%, #0D2A50 100%);
+    padding: 32px 44px 28px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  /* Geometric sunburst behind header */
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    border: 40px solid rgba(13,184,167,0.08);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -30px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    border: 30px solid rgba(204,0,0,0.07);
+  }
+
+  .header-left { position: relative; z-index: 2; }
+
+  .angola-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 100px;
+    padding: 5px 14px;
+    margin-bottom: 18px;
+  }
+  .angola-badge-flag {
+    display: flex; flex-direction: column; gap: 1.5px;
+    width: 18px; height: 12px; border-radius: 2px; overflow: hidden;
+  }
+  .flag-r { background: #CC0000; flex: 1; }
+  .flag-b { background: #333; flex: 1; }
+  .angola-badge span {
+    font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.9);
+    letter-spacing: 2.5px; text-transform: uppercase;
+  }
+
+  .header-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .header-sub {
+    font-size: 15px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  .header-sub strong {
+    color: #0DB8A7;
+    font-weight: 700;
+  }
+
+  /* Logo area */
+  .logo-wrap {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+  }
+  .logo-bg {
+    width: 160px; height: 160px;
+    border-radius: 24px;
+    background: white;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow:
+      0 0 0 3px rgba(13,184,167,0.3),
+      0 12px 40px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
+  .logo-bg img {
+    width: 148px; height: 148px;
+    object-fit: contain;
+    border-radius: 18px;
+  }
+
+  /* ── Teal divider ── */
+  .teal-bar {
+    height: 5px;
+    background: linear-gradient(to right, #0DB8A7, #089B8C, #0DB8A7);
+  }
+
+  /* ── Body ── */
+  .body {
+    padding: 36px 44px 32px;
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    background: white;
+    position: relative;
+  }
+
+  /* subtle dot bg */
+  .body::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(13,184,167,0.07) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+
+  /* ── QR side ── */
+  .qr-side {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .qr-frame {
+    background: white;
+    border-radius: 18px;
+    padding: 13px;
+    border: 2px solid #C2F0EB;
+    box-shadow: 0 8px 28px rgba(13,184,167,0.15), 0 2px 8px rgba(0,0,0,0.06);
+    position: relative;
+  }
+  .corner {
+    position: absolute;
+    width: 20px; height: 20px;
+  }
+  .corner-tl { top: 4px; left: 4px; border-top: 3px solid #CC0000; border-left: 3px solid #CC0000; border-radius: 4px 0 0 0; }
+  .corner-tr { top: 4px; right: 4px; border-top: 3px solid #0A1F3C; border-right: 3px solid #0A1F3C; border-radius: 0 4px 0 0; }
+  .corner-bl { bottom: 4px; left: 4px; border-bottom: 3px solid #0A1F3C; border-left: 3px solid #0A1F3C; border-radius: 0 0 0 4px; }
+  .corner-br { bottom: 4px; right: 4px; border-bottom: 3px solid #CC0000; border-right: 3px solid #CC0000; border-radius: 0 0 4px 0; }
+  #qr-canvas { display: block; border-radius: 6px; }
+
+  .scan-pill {
+    display: flex; align-items: center; gap: 7px;
+    background: #0A1F3C;
+    border-radius: 100px;
+    padding: 7px 16px;
+  }
+  .scan-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #0DB8A7;
+    animation: blink 1.6s infinite;
+  }
+  @keyframes blink {
+    0%,100%{opacity:1} 50%{opacity:.3}
+  }
+  .scan-text {
+    font-size: 11px; font-weight: 700;
+    color: white; letter-spacing: 2px; text-transform: uppercase;
+  }
+
+  /* ── Content side ── */
+  .content-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-weight: 900;
+    color: #0A1F3C;
+    line-height: 1.08;
+    letter-spacing: -0.8px;
+  }
+  .headline em { color: #0DB8A7; font-style: italic; }
+
+  .sub-text {
+    font-size: 13.5px;
+    color: rgb(10, 31, 60);
+    line-height: 1.65;
+    font-weight: 400;
+  }
+
+  /* Pills */
+  .pills { display: flex; flex-direction: column; gap: 8px; }
+  .pill {
+    display: flex; align-items: center; gap: 10px;
+    background: #F5FFFE;
+    border: 1.5px solid rgba(13,184,167,0.2);
+    border-radius: 11px;
+    padding: 9px 13px;
+  }
+  .pill-icon {
+    width: 30px; height: 30px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+  .pill-label {
+    font-size: 13px; font-weight: 600; color: #0A1F3C;
+  }
+
+  /* URL bar */
+  .url-bar {
+    display: flex; align-items: center; gap: 10px;
+    background: #0A1F3C;
+    border-radius: 12px;
+    padding: 11px 16px;
+  }
+  .url-icon {
+    width: 26px; height: 26px; border-radius: 7px;
+    background: #0DB8A7;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .url-text {
+    font-size: 11px; color: rgba(255,255,255,0.5);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-weight: 400;
+  }
+  .url-text strong { color: #0DB8A7; font-weight: 700; }
+
+  /* ── Bottom band ── */
+  .bottom-band {
+    background: #0A1F3C;
+    padding: 16px 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .bottom-band::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 400px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(13,184,167,0.06), transparent 70%);
+  }
+
+  .bottom-left {
+    display: flex; align-items: center; gap: 12px; position: relative; z-index: 1;
+  }
+  .angola-emblem {
+    display: flex; align-items: center; gap: 4px;
+  }
+  .emb-ring {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid #CC0000;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .emb-ring::before {
+    content: ''; width: 7px; height: 7px; border-radius: 50%; background: #CC0000;
+  }
+  .emb-star { color: #FFCC00; font-size: 18px; line-height: 1; }
+
+  .bottom-copy {
+    font-size: 11px; font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+
+  .bottom-right { position: relative; z-index: 1; }
+  .bottom-tagline {
+    font-size: 11px; color: rgba(255,255,255,0.35);
+    letter-spacing: 1px; text-align: right;
+  }
+  .bottom-tagline strong { color: #0DB8A7; font-weight: 700; }
+
+  /* ── Flag bottom ── */
+  .flag-bottom {
+    height: 6px;
+    background: linear-gradient(to right, #CC0000 50%, #111111 50%);
+  }
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <!-- Flag top -->
+  <div class="flag-top"><div class="flag-top-r"></div><div class="flag-top-b"></div></div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="angola-badge">
+        <div class="angola-badge-flag"><div class="flag-r"></div><div class="flag-b"></div></div>
+        <span>República de Angola</span>
+      </div>
+      <div class="header-title">Apresenta</div>
+      <div class="header-sub">
+        <strong>Saúde onde você precisar</strong><br>
+        Luanda · Angola · Disponível agora
+      </div>
+    </div>
+
+    <div class="logo-wrap">
+      <div class="logo-bg">
+        <img src="logo-medigo.jpeg" alt="Logo MedGo" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Teal bar -->
+  <div class="teal-bar"></div>
+
+  <!-- Body -->
+  <div class="body">
+
+    <!-- QR -->
+    <div class="qr-side">
+      <div class="qr-frame">
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+        <div id="qr-canvas"></div>
+      </div>
+      <div class="scan-pill">
+        <div class="scan-dot"></div>
+        <div class="scan-text">Digitalizar</div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content-side">
+      <div class="headline">
+        A sua saúde,<br><em>ao alcance<br>de um toque</em>
+      </div>
+
+      <div class="sub-text">
+        Médicos, farmácias, emergências e muito mais — disponíveis agora em Angola.
+      </div>
+
+      <div class="pills">
+        <div class="pill">
+          <div class="pill-icon" style="background:#FFF0F0">🩺</div>
+          <div class="pill-label">Médicos certificados em minutos</div>
+        </div>
+        <div class="pill">
+          <div class="pill-icon" style="background:#FFF5E0">🚨</div>
+          <div class="pill-label">Emergências 24h / 7 dias</div>
+        </div>
+        <div class="pill">
+          <div class="pill-icon" style="background:#E8FAF8">💊</div>
+          <div class="pill-label">Farmácias e receitas digitais</div>
+        </div>
+      </div>
+
+      <div class="url-bar">
+        <div class="url-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+        </div>
+        <div class="url-text">
+          <strong>eufraniodiogo.github.io</strong>/medigo-landing-page/
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom band -->
+  <div class="bottom-band">
+    <div class="bottom-left">
+      <div class="angola-emblem">
+        <div class="emb-ring"></div>
+        <div class="emb-star">★</div>
+        <div class="emb-ring"></div>
+      </div>
+      <div class="bottom-copy">Luanda · Angola · 2025</div>
+    </div>
+    <div class="bottom-right">
+      <div class="bottom-tagline">Digitalize o QR code<br>ou aceda em <strong>medigo</strong></div>
+    </div>
+  </div>
+
+  <!-- Flag bottom -->
+  <div class="flag-bottom"></div>
+
+</div>
+
+<script>
+  new QRCode(document.getElementById("qr-canvas"), {
+    text: "https://eufraniodiogo.github.io/medigo-landing-page/",
+    width: 184,
+    height: 184,
+    colorDark: "#0A1F3C",
+    colorLight: "#FFFFFF",
+    correctLevel: QRCode.CorrectLevel.H
+  });
+</script>
+</body>
+</html>

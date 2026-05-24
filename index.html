@@ -19,8 +19,9 @@
   --ink:         #0B1724;
   --ink-80:      rgba(11,23,36,0.80);
   --ink-50:      rgba(11,23,36,0.50);
-  --ink-30:      rgba(11,23,36,0.30);
+  --ink-30:      rgba(11,23,36,0.80);
   --ink-10:      rgba(11,23,36,0.06);
+  --sample: rgba(12, 220, 199, 0.903);
 
   --page:        #F5F8FA;
   --surface:     #FFFFFF;
@@ -42,12 +43,14 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;overflow-x:hidden}
 body{
-  background:var(--page);
+  /*background:var(--page);*/
+  background: transparent;
   color:var(--ink);
   font-family:'DM Sans',sans-serif;
   font-weight:400;
   overflow-x:hidden;
   cursor:none;
+  
 }
 
 /* ── Custom cursor ────────────────────────────────────────────────── */
@@ -127,8 +130,8 @@ main{position:relative;z-index:1}
 /* ── Hero ─────────────────────────────────────────────────────────── */
 #hero{
   min-height:100vh;
-  display:flex;flex-direction:column;
-  justify-content:center;align-items:center;
+  display:flex;flex-direction:row-reverse;
+  justify-content: space-between;align-items:center;
   text-align:center;
   padding:140px 24px 80px;
   position:relative;overflow:hidden;
@@ -227,15 +230,13 @@ main{position:relative;z-index:1}
 .phone-frame{
   width:240px;height:480px;
   background:linear-gradient(160deg,#FFFFFF,#F0F6FA);
-  border-radius:42px;
+  border-radius:30px;
   border:1.5px solid rgba(13,184,167,.2);
   box-shadow:
-    0 0 0 8px rgba(13,184,167,.06),
-    var(--shadow-xl),
-    0 0 60px rgba(13,184,167,.08),
-    inset 0 1px 0 rgba(255,255,255,.9);
+    0 0 0 8px rgba(13,184,167,.06);
   display:flex;flex-direction:column;
-  align-items:center;padding:22px 18px 18px;
+  align-items:center;
+  padding:8px 8px 10px;
   animation:floatPhone 4s ease-in-out infinite;
 }
 @keyframes floatPhone{
@@ -243,14 +244,16 @@ main{position:relative;z-index:1}
   50%{transform:translateY(-12px) rotate(1deg)}
 }
 .phone-notch{
-  width:76px;height:20px;
+  width:76px;height:10px;
   background:var(--ink);border-radius:0 0 12px 12px;
-  margin-bottom:14px;
+  margin-bottom:0;
+  position: fixed;
 }
 .phone-screen{
   flex:1;width:100%;
-  background:var(--page);
-  border-radius:18px;overflow:hidden;
+  background-image:url('app_home.jpeg');
+  background-size: cover;background-position:center;
+  border-radius:20px;overflow:hidden;
 }
 .phone-header{
   background:linear-gradient(135deg,var(--teal),var(--teal-dark));
@@ -407,7 +410,7 @@ section{padding:120px 24px;max-width:1160px;margin:0 auto}
 .step-item:hover{padding-left:8px}
 .step-num{
   font-family:'Playfair Display',serif;
-  font-size:11px;font-weight:700;color:var(--teal);
+  font-size:24px;font-weight:700;color:var(--teal);
   letter-spacing:2px;padding-top:3px;min-width:28px;
 }
 .step-title{font-size:17px;font-weight:700;margin-bottom:7px;color:var(--ink)}
@@ -617,6 +620,11 @@ footer{
   .stat-num{font-size:34px}
   footer{flex-direction:column;gap:14px;text-align:center}
 }
+
+.medi-go-logo-image {
+  height: 48px;
+  object-fit: cover;
+}
 </style>
 </head>
 <body>
@@ -627,7 +635,7 @@ footer{
 
 <!-- ── NAV ────────────────────────────────────────────────────────── -->
 <nav id="nav">
-  <a href="#" class="nav-logo">medi<span>go</span></a>
+  <a href="#" class="nav-logo"><img class="medi-go-logo-image" src="logo-medigo-new.png" alt="logo site"></a>
   <ul class="nav-links">
     <li><a href="#features">Funcionalidades</a></li>
     <li><a href="#how">Como funciona</a></li>
@@ -641,7 +649,8 @@ footer{
 
 <!-- ── HERO ───────────────────────────────────────────────────────── -->
 <section id="hero">
-  <div class="hero-badge">
+<div>
+    <div class="hero-badge">
     <span class="hero-badge-dot"></span>
     Disponível em Angola
   </div>
@@ -666,45 +675,13 @@ footer{
       Ver como funciona
     </a>
   </div>
+</div>
 
   <div class="hero-phone">
     <div class="phone-frame">
       <div class="phone-notch"></div>
       <div class="phone-screen">
-        <div class="phone-header">
-          <div class="phone-greeting">Bom dia, João 👋</div>
-          <div style="font-size:6px;color:rgba(255,255,255,.7)">Como se sente hoje?</div>
-          <div class="phone-search">
-            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            Médico, especialidade…
-          </div>
-        </div>
-        <div class="phone-cards">
-          <div class="phone-card">
-            <div class="phone-avatar">DR</div>
-            <div>
-              <div class="phone-card-name">Dr. António Silva</div>
-              <div class="phone-card-spec">Cardiologista · ⭐ 4.9</div>
-            </div>
-            <div class="phone-card-badge">2 min</div>
-          </div>
-          <div class="phone-card">
-            <div class="phone-avatar" style="background:linear-gradient(135deg,#7C3AED,#5B21B6)">EN</div>
-            <div>
-              <div class="phone-card-name">Enf. Maria Lopes</div>
-              <div class="phone-card-spec">Enfermeira · ⭐ 4.8</div>
-            </div>
-            <div class="phone-card-badge" style="color:#7C3AED;background:rgba(124,58,237,.09)">5 min</div>
-          </div>
-          <div class="phone-card">
-            <div class="phone-avatar" style="background:linear-gradient(135deg,#F59E0B,#D97706)">RX</div>
-            <div>
-              <div class="phone-card-name">Farmácia Central</div>
-              <div class="phone-card-spec">1.2 km · Aberta agora</div>
-            </div>
-            <div class="phone-card-badge" style="color:#D97706;background:rgba(245,158,11,.09)">Stock</div>
-          </div>
-        </div>
+      
       </div>
     </div>
   </div>
@@ -1036,7 +1013,7 @@ let t=0;
   for(let x=0;x<W;x+=48){
     for(let y=0;y<H;y+=48){
       ctx.beginPath(); ctx.arc(x,y,1,0,Math.PI*2);
-      ctx.fillStyle='rgba(13,184,167,0.06)'; ctx.fill();
+      ctx.fillStyle='rgba(12, 220, 199, 1)'; ctx.fill();
     }
   }
 
@@ -1052,7 +1029,9 @@ let t=0;
         ctx.beginPath();
         ctx.moveTo(particles[i].x,particles[i].y);
         ctx.lineTo(particles[j].x,particles[j].y);
-        ctx.strokeStyle=`rgba(13,184,167,${0.04*(1-d/75)})`;
+
+        const alpha=0.4*(1-d/75) + 0.6;
+        ctx.strokeStyle=`rgba(13,184,167,${alpha})`;
         ctx.lineWidth=0.5; ctx.stroke();
       }
     }
